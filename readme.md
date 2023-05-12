@@ -1,0 +1,1 @@
+[简单对象模型](https://aosabook.org/en/500L/a-simple-object-model.html)
