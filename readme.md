@@ -214,5 +214,30 @@ def test_getattr():
 需要更改`Base.read_attr`和`Base.write_attr`
 ```python
 class BASE:
-    pass
+    
+    def read_attr(self, fieldname):
+        """ read field 'fieldname' out of the object """
+        result = self._read_dict(fieldname)
+        if result is not MISSING:
+            return result
+        result = self.cls._read_from_class(fieldname)
+        if _is_bindable(result):
+            return _make_boundmethod(result, self)
+        if result is not MISSING:
+            return result
+        meth = self.cls._read_from_class("__getattr__")
+        if meth is not MISSING:
+            return meth(self, fieldname)
+        raise AttributeError(fieldname)
+
+    def write_attr(self, fieldname, value):
+        """ write field 'fieldname' into the object """
+        meth = self.cls._read_from_class("__setattr__")
+        return meth(self, fieldname, value)
+# 属性的写入完全推迟到__setattr__方法。
+# 为了使这个工作，OBJECT需要有一个__setattr__调用默认行为的方法
+
+def OBJECT__setattr__(self, fieldname, value):
+    self._write_dict(fieldname, value)
+OBJECT = Class("object", None, {"__setattr__": OBJECT__setattr__}, None)
 ```

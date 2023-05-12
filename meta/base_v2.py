@@ -58,8 +58,11 @@ class Instance(Base):
         Base.__init__(self,cls=base,attrs={})
 
 
+def OBJECT__setattr__(self, fieldname, value):
+    self.attrs[fieldname] = value
 
-OBJECT = Class(name='object',base_class=None,fields={},metaclass=None)
+
+OBJECT = Class(name='object',base_class=None,fields={'__setattr__':OBJECT__setattr__},metaclass=None)
 TYPE = Class(name='type',base_class=OBJECT, fields={},metaclass=None)
 OBJECT.cls = TYPE
 TYPE.cls = TYPE
