@@ -1,5 +1,5 @@
-from base import *
-
+# from base import *
+from base_v2 import *
 def test_read_write_field():
     # Python code
     class A(object):
