@@ -241,3 +241,7 @@ def OBJECT__setattr__(self, fieldname, value):
     self._write_dict(fieldname, value)
 OBJECT = Class("object", None, {"__setattr__": OBJECT__setattr__}, None)
 ```
+
+# 实例优化
+实例用字典存储的`属性` 同类实例往往有相同`键`  
+映射优化：把字典分两部分，`键`共享,实例存储其引用 和值列表(这在内存中紧凑)
